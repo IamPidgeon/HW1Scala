@@ -43,31 +43,12 @@ object Main {
   }
 
   // Exercise 3
-  // Consider removing coins larger than money for potential optimization
+  // Make tail recursive
   def countChange(money: Int, coins: List[Int]): Int = {
-    if (money < coins.min || coins isEmpty) 0
+    if (coins.isEmpty || money < coins.min) 0
     else if (coins contains money) 
     	 1 + countChange(money, coins diff List(money))
-    else for {
-      coin <- coins
-      if coin < money
-    } yield countChange(money - coin, coins diff List(coin))
-    
-    //else find largest coin less than money, and recurse with the remainder
-		  // if a coin equals the remainder, then add 1 to result and recurse with same remainder and list-coin
-		  // else find largest coin less than money, and recurse with the remainder
-		  // etc.
-    
+    else (coins.filter(money > _).map ((coin : Int) => countChange(money - coin, coins diff (coins.filter (coin < _)) ))).sum
   }
 }
-
-
- test("countChange: unsorted CHF") {
-    assert(countChange(300,List(500,5,50,100,20,200,10)) === 1022)
-  }
- 
- 200,100
- 200,50
- 200,10
- 200,5
  
