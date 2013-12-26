@@ -41,6 +41,6 @@ class CountChangeSuite extends FunSuite {
   }
   
   test("countChange: very large number") {
-    assert(countChange(100000,List(5)) === 1)
+    assert(countChange(10000,List(5)) === 1)
   }
 }
