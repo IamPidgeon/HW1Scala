@@ -18,19 +18,26 @@ object Main {
   lazy val pStream: Stream[Vector[Int]] = {
     Vector(1) #:: Vector(1,1) #:: 
       pStream.zip(pStream.tail).map { pair => 
-        val r2 = pair._2
-        var x = r2.length
-        var y = Vector(1)
-        while (x > 1) { 
-          y = Vector(r2(x-2) + r2(x-1)) ++ y
-          x-=1 }
-        y = Vector(1) ++ y; y }
+        nextVector(pair._2) 
+    	}
+  }
+  
+  def nextVector(lastVec: Vector[Int]) = {
+      val vec1 = Vector(1)
+      def buildVector(lastLen: Int): Vector[Int] = {
+        if (lastLen == lastVec.length)
+          buildVector(lastLen-1) ++ Vector(lastVec(lastLen-2) + lastVec(lastLen-1)) ++ vec1
+        else if (lastLen > 1)
+          buildVector(lastLen-1) ++ Vector(lastVec(lastLen-2) + lastVec(lastLen-1))
+        else vec1
+      }
+      buildVector(lastVec.length)   
   }
   
   def pascal(c: Int, r: Int): Int = {
     require(c >= 0, "column must be >= 0")
 	require(r >= 0, "row must be >= 0")
-	// Can easily set up more rules like below but the problem asks for recursion
+	// Can set up more rules like below but the problem asks for recursion
 	if (c == 0 || c == r) 1 else pStream(r)(c) 
   }
 		  
@@ -38,7 +45,7 @@ object Main {
   def balance(chars: List[Char]): Boolean = {
     if ( chars contains "(".head )
     	if ( (chars indexOf ")".head) > (chars indexOf "(".head) )
-    	balance(chars diff "()".toList)
+    	  balance(chars diff "()".toList)
         else false
     else !( chars contains ")".head )
   }
